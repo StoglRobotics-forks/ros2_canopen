@@ -3,45 +3,45 @@ ROS2 CANopen Stack
 
 This is the documentation of the ROS2 CANopen stack. 
 
-
-.. toctree::
+.. toctree:: 
   :maxdepth: 1
-  :caption: Getting started
+  :caption: Quickstart
+  :glob:
 
-  overview
-  installation
-    
-.. toctree::
+  quickstart/installation
+  quickstart/configuration
+  quickstart/operation
+
+.. toctree:: 
   :maxdepth: 1
-  :caption: Concepts and Design
+  :caption: User Guide
+  :glob:
 
-  design-objectives
-  configuration
-  device-manager
-  system-interface
-  master
-  proxy-device
-  motion-controller
+  user-guide/configuration/configuration
+  user-guide/operation/operation
+  user-guide/operation/service-interface
+  user-guide/operation/managed-service-interface
+  user-guide/operation/ros2-control-interface
+  user-guide/master 
+  user-guide/proxy-driver
+  user-guide/cia402-driver
 
-.. toctree::
+
+.. toctree:: 
   :maxdepth: 1
-  :caption: Usage
-  
-  configuration-package
-  running-configuration-package
-  
+  :caption: Developer Guide
+  :glob:
 
-.. toctree::
+  developers-guide/design-objectives
+  developers-guide/overview
+  developers-guide/architecture
+  developers-guide/new-driver
+  developers-guide/new-master
+  API Reference <https://ros-industrial.github.io/ros2_canopen/api/>
+
+.. toctree:: 
   :maxdepth: 1
-  :caption: Extension
+  :caption: Software Tests
+  :glob:
 
-  new-driver
-  new-master
-
-.. toctree::
-  :maxdepth: 1
-  :caption: Tests and Benchmarks
-
-  alpha-test-description
-  sil-tests
-  tested-hardware
+  software-tests/**
