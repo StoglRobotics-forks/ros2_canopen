@@ -58,6 +58,11 @@ public:
     const rclcpp::NodeOptions & node_options = rclcpp::NodeOptions())
   : rclcpp_components::ComponentManager(executor, node_name, node_options)
   {
+    // define service profile
+    auto service_profile = rmw_qos_profile_services_default;
+    service_profile.history = RMW_QOS_POLICY_HISTORY_KEEP_ALL;
+    service_profile.depth = 10;
+
     executor_ = executor;
     this->declare_parameter<std::string>("can_interface_name", "");
     this->declare_parameter<std::string>("master_config", "");
@@ -68,10 +73,10 @@ public:
       "~/init_driver",
       std::bind(
         &DeviceContainer::on_init_driver, this, std::placeholders::_1, std::placeholders::_2),
-      rclcpp::QoS(10), client_cbg_);
+      service_profile, client_cbg_);
 
-    this->loadNode_srv_.reset();
-    this->unloadNode_srv_.reset();
+    // this->loadNode_srv_.reset();
+    // this->unloadNode_srv_.reset();
     lifecycle_operation_ = false;
   }
 
@@ -178,7 +183,7 @@ public:
   virtual void on_list_nodes(
     const std::shared_ptr<rmw_request_id_t> request_header,
     const std::shared_ptr<ListNodes::Request> request,
-    std::shared_ptr<ListNodes::Response> response) override;
+    std::shared_ptr<ListNodes::Response> response);
 
   /**
    * @brief Get the registered drivers object

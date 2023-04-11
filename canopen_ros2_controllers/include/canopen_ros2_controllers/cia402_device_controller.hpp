@@ -60,7 +60,7 @@ public:
   Cia402DeviceController();
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_init();
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init();
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const;
@@ -69,13 +69,13 @@ public:
   controller_interface::InterfaceConfiguration state_interface_configuration() const;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_deactivate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
@@ -87,8 +87,7 @@ protected:
     const std::string & service, Cia402CommandInterfaces cmd, Cia402CommandInterfaces fbk)
   {
     // define service profile Qos
-    auto service_profile = rclcpp::QoS(1);
-    service_profile.keep_all();
+    auto service_profile = rmw_qos_profile_services_default;
 
     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr srv =
       get_node()->create_service<std_srvs::srv::Trigger>(

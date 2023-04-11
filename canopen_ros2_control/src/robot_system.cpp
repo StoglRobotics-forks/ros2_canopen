@@ -21,7 +21,7 @@ using namespace canopen_ros2_control;
 
 // auto robot_system_logger = rclcpp::get_logger("robot_system_interface");
 
-hardware_interface::CallbackReturn RobotSystem::on_init(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_init(
   const hardware_interface::HardwareInfo & info)
 {
   if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
@@ -115,7 +115,7 @@ hardware_interface::CallbackReturn RobotSystem::on_init(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn RobotSystem::on_configure(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_configure(
   const rclcpp_lifecycle::State & previous_state)
 {
   executor_ =
@@ -137,7 +137,7 @@ hardware_interface::CallbackReturn RobotSystem::on_configure(
   }
   return CallbackReturn::SUCCESS;
 }
-hardware_interface::CallbackReturn RobotSystem::on_activate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_activate(
   const rclcpp_lifecycle::State & previous_state)
 {
   for (auto & data : robot_motor_data_)
@@ -150,7 +150,7 @@ hardware_interface::CallbackReturn RobotSystem::on_activate(
   }
   return CallbackReturn::SUCCESS;
 }
-hardware_interface::CallbackReturn RobotSystem::on_deactivate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_deactivate(
   const rclcpp_lifecycle::State & previous_state)
 {
   for (auto & data : robot_motor_data_)
@@ -163,13 +163,13 @@ hardware_interface::CallbackReturn RobotSystem::on_deactivate(
   }
   return CallbackReturn::SUCCESS;
 }
-hardware_interface::CallbackReturn RobotSystem::on_cleanup(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_cleanup(
   const rclcpp_lifecycle::State & previous_state)
 {
   clean();
   return CallbackReturn::SUCCESS;
 }
-hardware_interface::CallbackReturn RobotSystem::on_shutdown(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn RobotSystem::on_shutdown(
   const rclcpp_lifecycle::State & previous_state)
 {
   clean();
@@ -200,8 +200,7 @@ std::vector<hardware_interface::CommandInterface> RobotSystem::export_command_in
   return command_interfaces;
 }
 
-hardware_interface::return_type RobotSystem::read(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type RobotSystem::read()
 {
   // Iterate over joints
   for (canopen_ros2_control::Cia402Data & data : robot_motor_data_)
@@ -212,8 +211,7 @@ hardware_interface::return_type RobotSystem::read(
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type RobotSystem::write(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type RobotSystem::write()
 {
   for (canopen_ros2_control::Cia402Data & data : robot_motor_data_)
   {

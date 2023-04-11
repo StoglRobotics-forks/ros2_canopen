@@ -42,10 +42,10 @@ Cia402DeviceController::Cia402DeviceController()
 {
 }
 
-controller_interface::CallbackReturn Cia402DeviceController::on_init()
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402DeviceController::on_init()
 {
-  if (CanopenProxyController::on_init() != controller_interface::CallbackReturn::SUCCESS)
-    return controller_interface::CallbackReturn::ERROR;
+  if (CanopenProxyController::on_init() != rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS)
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::ERROR;
 
   handle_init_service_ = createTriggerSrv(
     "~/init", Cia402CommandInterfaces::INIT_CMD, Cia402CommandInterfaces::INIT_FBK);
@@ -85,7 +85,7 @@ controller_interface::CallbackReturn Cia402DeviceController::on_init()
                                                Cia402CommandInterfaces::);
   */
 
-  return controller_interface::CallbackReturn::SUCCESS;
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
 }
 
 controller_interface::InterfaceConfiguration
@@ -121,7 +121,7 @@ controller_interface::InterfaceConfiguration Cia402DeviceController::state_inter
   return state_interfaces_config;
 }
 
-controller_interface::CallbackReturn Cia402DeviceController::on_configure(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402DeviceController::on_configure(
   const rclcpp_lifecycle::State & previous_state)
 {
   if (CanopenProxyController::on_configure(previous_state) != CallbackReturn::SUCCESS)
@@ -130,7 +130,7 @@ controller_interface::CallbackReturn Cia402DeviceController::on_configure(
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn Cia402DeviceController::on_activate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402DeviceController::on_activate(
   const rclcpp_lifecycle::State & previous_state)
 {
   if (CanopenProxyController::on_activate(previous_state) != CallbackReturn::SUCCESS)
@@ -139,7 +139,7 @@ controller_interface::CallbackReturn Cia402DeviceController::on_activate(
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn Cia402DeviceController::on_deactivate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402DeviceController::on_deactivate(
   const rclcpp_lifecycle::State & previous_state)
 {
   if (CanopenProxyController::on_deactivate(previous_state) != CallbackReturn::SUCCESS)

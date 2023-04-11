@@ -35,6 +35,7 @@ class RobotSystem : public hardware_interface::SystemInterface
 public:
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   RobotSystem() : hardware_interface::SystemInterface() {}
+
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   ~RobotSystem() = default;
 
@@ -49,10 +50,10 @@ public:
    * - master_bin
    *
    * @param info
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_init(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init(
     const hardware_interface::HardwareInfo & info) override;
 
   /**
@@ -62,10 +63,10 @@ public:
    * Start the threads for running the canopen stack.
    *
    * @param info
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_configure(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
   /**
@@ -101,40 +102,40 @@ public:
    * @brief Cleanup the hardware interface
    *
    * @param previous_state
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_cleanup(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_cleanup(
     const rclcpp_lifecycle::State & previous_state) override;
 
   /**
    * @brief Shutdown the hardware interface
    *
    * @param previous_state
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_shutdown(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_shutdown(
     const rclcpp_lifecycle::State & previous_state) override;
 
   /**
    * @brief Activate the hardware interface
    *
    * @param previous_state
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_activate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   /**
    * @brief Deactivate the hardware interface
    *
    * @param previous_state
-   * @return hardware_interface::CallbackReturn
+   * @return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_deactivate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   /**
@@ -143,8 +144,7 @@ public:
    * @return hardware_interface::return_type
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type read(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  hardware_interface::return_type read() override;
 
   /**
    * @brief Write the command to the hardware interface
@@ -152,8 +152,7 @@ public:
    * @return hardware_interface::return_type
    */
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type write(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  hardware_interface::return_type write() override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   hardware_interface::return_type perform_command_mode_switch(
