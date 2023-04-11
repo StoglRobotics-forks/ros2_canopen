@@ -70,8 +70,8 @@ public:
         &DeviceContainer::on_init_driver, this, std::placeholders::_1, std::placeholders::_2),
       rmw_qos_profile_services_default, client_cbg_);
 
-    this->loadNode_srv_.reset();
-    this->unloadNode_srv_.reset();
+    // this->loadNode_srv_.reset();
+    // this->unloadNode_srv_.reset();
     lifecycle_operation_ = false;
   }
 
@@ -178,7 +178,7 @@ public:
   virtual void on_list_nodes(
     const std::shared_ptr<rmw_request_id_t> request_header,
     const std::shared_ptr<ListNodes::Request> request,
-    std::shared_ptr<ListNodes::Response> response) override;
+    std::shared_ptr<ListNodes::Response> response);
 
   /**
    * @brief Get the registered drivers object

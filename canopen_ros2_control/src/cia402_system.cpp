@@ -35,7 +35,7 @@ namespace canopen_ros2_control
 
 Cia402System::Cia402System() : CanopenSystem() {}
 
-hardware_interface::CallbackReturn Cia402System::on_init(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402System::on_init(
   const hardware_interface::HardwareInfo & info)
 {
   if (CanopenSystem::on_init(info) != CallbackReturn::SUCCESS)
@@ -79,7 +79,7 @@ void Cia402System::initDeviceContainer()
   RCLCPP_INFO(device_container_->get_logger(), "Initialisation successful.");
 }
 
-hardware_interface::CallbackReturn Cia402System::on_configure(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402System::on_configure(
   const rclcpp_lifecycle::State & previous_state)
 {
   executor_ = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -224,24 +224,23 @@ std::vector<hardware_interface::CommandInterface> Cia402System::export_command_i
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn Cia402System::on_activate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402System::on_activate(
   const rclcpp_lifecycle::State & previous_state)
 {
   return CanopenSystem::on_activate(previous_state);
 }
 
-hardware_interface::CallbackReturn Cia402System::on_deactivate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Cia402System::on_deactivate(
   const rclcpp_lifecycle::State & previous_state)
 {
   return CanopenSystem::on_deactivate(previous_state);
 }
 
-hardware_interface::return_type Cia402System::read(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type Cia402System::read()
 {
   // TODO(anyone): read robot states
 
-  auto ret_val = CanopenSystem::read(time, period);
+  auto ret_val = CanopenSystem::read();
 
   auto drivers = device_container_->get_registered_drivers();
 
@@ -258,8 +257,7 @@ hardware_interface::return_type Cia402System::read(
   return ret_val;
 }
 
-hardware_interface::return_type Cia402System::write(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type Cia402System::write()
 {
   auto drivers = device_container_->get_registered_drivers();
 
@@ -330,6 +328,7 @@ hardware_interface::return_type Cia402System::write(
 
   return hardware_interface::return_type::OK;
 }
+
 
 void Cia402System::switchModes(uint id, const std::shared_ptr<ros2_canopen::Cia402Driver> & driver)
 {

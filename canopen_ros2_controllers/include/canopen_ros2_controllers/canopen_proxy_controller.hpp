@@ -58,6 +58,13 @@ enum StateInterfaces
   LAST_STATE_AUX,
 };
 
+enum class return_type : std::uint8_t
+{
+  OK = 0,
+  ERROR = 1,
+  SUCCESS [[deprecated("Use controller_interface::return_type::OK instead.")]] = OK
+};
+
 }  // namespace
 
 namespace canopen_ros2_controllers
@@ -70,7 +77,7 @@ public:
   CanopenProxyController();
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_init() override;
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init() override;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const override;
@@ -79,15 +86,15 @@ public:
   controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_configure(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_activate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_deactivate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC

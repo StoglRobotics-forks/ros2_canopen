@@ -153,7 +153,7 @@ public:
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   ~CanopenSystem();
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_init(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init(
     const hardware_interface::HardwareInfo & info) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
@@ -163,32 +163,30 @@ public:
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_configure(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_cleanup(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_cleanup(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_shutdown(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_shutdown(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_activate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_deactivate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type read(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  hardware_interface::return_type read() override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type write(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  hardware_interface::return_type write() override;
 
 protected:
   std::shared_ptr<ros2_canopen::DeviceContainer> device_container_;

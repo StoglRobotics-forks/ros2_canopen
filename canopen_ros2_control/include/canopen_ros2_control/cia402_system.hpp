@@ -88,10 +88,10 @@ public:
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   ~Cia402System() = default;
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info);
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
   std::vector<hardware_interface::StateInterface> export_state_interfaces();
@@ -100,16 +100,16 @@ public:
   std::vector<hardware_interface::CommandInterface> export_command_interfaces();
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period);
+  hardware_interface::return_type read() override;
 
   CANOPEN_ROS2_CONTROL__VISIBILITY_PUBLIC
-  hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period);
+  hardware_interface::return_type write() override;
 
 protected:
   // can stuff

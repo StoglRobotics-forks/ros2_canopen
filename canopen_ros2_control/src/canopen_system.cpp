@@ -57,7 +57,7 @@ void CanopenSystem::clean()
 
 CanopenSystem::~CanopenSystem() { clean(); }
 
-hardware_interface::CallbackReturn CanopenSystem::on_init(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_init(
   const hardware_interface::HardwareInfo & info)
 {
   if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
@@ -75,7 +75,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_init(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_configure(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_configure(
   const rclcpp_lifecycle::State & previous_state)
 {
   executor_ = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -99,14 +99,14 @@ hardware_interface::CallbackReturn CanopenSystem::on_configure(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_cleanup(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_cleanup(
   const rclcpp_lifecycle::State & previous_state)
 {
   clean();
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_shutdown(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_shutdown(
   const rclcpp_lifecycle::State & previous_state)
 {
   clean();
@@ -230,7 +230,7 @@ std::vector<hardware_interface::CommandInterface> CanopenSystem::export_command_
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_activate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to receive commands
@@ -238,7 +238,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_activate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn CanopenSystem::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to stop receiving commands
@@ -246,8 +246,7 @@ hardware_interface::CallbackReturn CanopenSystem::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type CanopenSystem::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::read()
 {
   // TODO(anyone): read robot states
 
@@ -258,8 +257,7 @@ hardware_interface::return_type CanopenSystem::read(
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type CanopenSystem::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type CanopenSystem::write()
 {
   // TODO(anyone): write robot's commands'
   auto drivers = device_container_->get_registered_drivers();

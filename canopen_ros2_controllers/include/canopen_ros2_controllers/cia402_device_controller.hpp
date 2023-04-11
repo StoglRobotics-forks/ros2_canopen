@@ -60,7 +60,7 @@ public:
   Cia402DeviceController();
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_init();
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_init();
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const;
@@ -69,13 +69,13 @@ public:
   controller_interface::InterfaceConfiguration state_interface_configuration() const;
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC
-  controller_interface::CallbackReturn on_deactivate(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state);
 
   CANOPEN_ROS2_CONTROLLERS__VISIBILITY_PUBLIC

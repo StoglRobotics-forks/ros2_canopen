@@ -41,8 +41,8 @@ using ControllerModeSrvType =
 
 namespace
 {
-constexpr auto NODE_SUCCESS = controller_interface::CallbackReturn::SUCCESS;
-constexpr auto NODE_ERROR = controller_interface::CallbackReturn::ERROR;
+constexpr auto NODE_SUCCESS = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+constexpr auto NODE_ERROR = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::ERROR;
 }  // namespace
 
 // subclassing and friending so we can access member variables
@@ -57,7 +57,7 @@ class TestableCanopenProxyController : public canopen_ros2_controllers::CanopenP
   FRIEND_TEST(CanopenProxyControllerTest, test_update_logic_slow);
 
 public:
-  controller_interface::CallbackReturn on_configure(
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override
   {
     auto ret = canopen_ros2_controllers::CanopenProxyController::on_configure(previous_state);
