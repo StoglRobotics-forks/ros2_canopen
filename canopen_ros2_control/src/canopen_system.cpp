@@ -68,8 +68,8 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
   RCLCPP_INFO(kLogger, "bus_config: '%s'", info_.hardware_parameters["bus_config"].c_str());
   RCLCPP_INFO(kLogger, "master_config: '%s'", info_.hardware_parameters["master_config"].c_str());
   RCLCPP_INFO(
-    kLogger, "can_interface_name_name: '%s'",
-    info_.hardware_parameters["can_interface_name_name"].c_str());
+    kLogger, "can_interface_name: '%s'",
+    info_.hardware_parameters["can_interface_name"].c_str());
   RCLCPP_INFO(kLogger, "master_bin: '%s'", info_.hardware_parameters["master_bin"].c_str());
 
   return CallbackReturn::SUCCESS;
@@ -147,7 +147,7 @@ void CanopenSystem::initDeviceContainer()
     proxy_driver->register_rpdo_cb(rpdo_cb);
 
     RCLCPP_INFO(
-      kLogger, "\nRegistered driver:\n    name: '%s'\n    node_id: '%u'",
+      kLogger, "\nRegistered driver:\n    name: '%s'\n    node_id: '%x'", //
       it->second->get_node_base_interface()->get_name(), it->first);
   }
 
