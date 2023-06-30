@@ -326,7 +326,6 @@ controller_interface::return_type CanopenProxyController::update(
   }
   else if (propagate_controller_command_msg(*current_cmd))
   {
-    RCLCPP_WARN(get_node()->get_logger(), "Write new command...");
     command_interfaces_[CommandInterfaces::TPDO_INDEX].set_value((*current_cmd)->index);
     command_interfaces_[CommandInterfaces::TPDO_SUBINDEX].set_value((*current_cmd)->subindex);
     command_interfaces_[CommandInterfaces::TPDO_DATA].set_value((*current_cmd)->data);
