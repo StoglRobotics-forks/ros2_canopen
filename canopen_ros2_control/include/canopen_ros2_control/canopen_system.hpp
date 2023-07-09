@@ -24,6 +24,7 @@
 #ifndef CANOPEN_ROS2_CONTROL__CANOPEN_SYSTEM_HPP_
 #define CANOPEN_ROS2_CONTROL__CANOPEN_SYSTEM_HPP_
 
+#include <queue>
 #include <string>
 #include <vector>
 
@@ -140,6 +141,38 @@ struct CanopenNodeData
 
   WORos2ControlCoData rsdo;  // write-only
   WORos2ControlCoData wsdo;  // write-only
+
+  // Define a FIFO queue for read-only data
+  std::queue<RORos2ControlCOData> rpdo_data_queue;
+
+  // Push data to the queue - FIFO
+  void set_rpdo_data(ros2_canopen::COData d)
+  {
+    RORos2ControlCOData rpdo_data_tmp;
+    rpdo_data_tmp.set_data(d);
+    rpdo_data_queue.push(rpdo_data_tmp);
+  }
+
+  // Clear the queue
+  void clear_rpdo_data()
+  {
+    std::queue<RORos2ControlCOData> empty;
+    std::swap(rpdo_data_queue, empty);
+  }
+
+  // Pop data from the queue
+  RORos2ControlCOData get_rpdo_data()
+  {
+    // If there is nothing new in the queue, return the old data
+    if (rpdo_data_queue.empty())
+    {
+      return rpdo_data;
+    }
+    RORos2ControlCOData rpdo_data_tmp;
+    rpdo_data_tmp = rpdo_data_queue.front();
+    rpdo_data_queue.pop();
+    return rpdo_data_tmp;
+  }
 };
 
 class CanopenSystem : public hardware_interface::SystemInterface
