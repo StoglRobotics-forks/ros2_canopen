@@ -56,14 +56,14 @@ install(TARGETS basic_slave_node
 install(TARGETS cia402_slave_node
 DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY
-  launch/
-  DESTINATION share/${PROJECT_NAME}/launch/
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
 install(DIRECTORY
-  config/
-  DESTINATION share/${PROJECT_NAME}/config/
+  launch config
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 if(BUILD_TESTING)
@@ -78,6 +78,9 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_include_directories(
+  include
+)
 ament_export_dependencies(
   ${dependencies}
 )

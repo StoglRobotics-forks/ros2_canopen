@@ -36,23 +36,23 @@ namespace
 {
 enum CommandInterfaces
 {
-  TPDO_INDEX,
-  TPDO_SUBINDEX,
-  TPDO_DATA,
-  TPDO_ONS,
   NMT_RESET,
   NMT_RESET_FBK,
   NMT_START,
   NMT_START_FBK,
+  TPDO_INDEX,
+  TPDO_SUBINDEX,
+  TPDO_DATA,
+  TPDO_ONS,
   LAST_COMMAND_AUX,
 };
 
 enum StateInterfaces
 {
+  NMT_STATE,
   RPDO_INDEX,
   RPDO_SUBINDEX,
   RPDO_DATA,
-  NMT_STATE,
   LAST_STATE_AUX,
 };
 
@@ -100,6 +100,8 @@ public:
 
 protected:
   std::string joint_name_;
+  bool disable_pdo_ = false;
+  bool disable_sdo_ = false;
 
   // Command subscribers
   // TPDO subscription

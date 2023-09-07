@@ -51,6 +51,8 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
   {
     // use auto declare
     auto_declare<std::string>("joint", joint_name_);
+    auto_declare<bool>("disable_pdo", disable_pdo_);
+    auto_declare<bool>("disable_sdo", disable_sdo_);
   }
   catch (const std::exception & e)
   {
@@ -74,13 +76,6 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
     return false;
   };
 
-  auto get_string_array_param_and_error_if_empty =
-    [&](std::vector<std::string> & parameter, const char * parameter_name)
-  {
-    parameter = get_node()->get_parameter(parameter_name).as_string_array();
-    return error_if_empty(parameter, parameter_name);
-  };
-
   auto get_string_param_and_error_if_empty =
     [&](std::string & parameter, const char * parameter_name)
   {
@@ -92,12 +87,17 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
   {
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::ERROR;
   }
+  disable_pdo_ = get_node()->get_parameter("disable_pdo").as_bool();
+  disable_sdo_ = get_node()->get_parameter("disable_sdo").as_bool();
 
   // Command Subscriber and callbacks
-  auto callback_cmd = [&](const std::shared_ptr<ControllerCommandMsg> msg) -> void
-  { input_cmd_.writeFromNonRT(msg); };
-  tpdo_subscriber_ = get_node()->create_subscription<ControllerCommandMsg>(
-    "~/tpdo", rclcpp::SystemDefaultsQoS(), callback_cmd);
+  if (!disable_pdo_)
+  {
+    auto callback_cmd = [&](const std::shared_ptr<ControllerCommandMsg> msg) -> void
+    { input_cmd_.writeFromNonRT(msg); };
+    tpdo_subscriber_ = get_node()->create_subscription<ControllerCommandMsg>(
+      "~/tpdo", rclcpp::SystemDefaultsQoS(), callback_cmd);
+  }
 
   input_cmd_.writeFromNonRT(nullptr);
 
@@ -109,9 +109,12 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
     nmt_state_rt_publisher_ = std::make_unique<ControllerNmtStateRTPublisher>(nmt_state_pub_);
 
     // rpdo publisher
-    rpdo_pub_ =
-      get_node()->create_publisher<ControllerCommandMsg>("~/rpdo", rclcpp::SystemDefaultsQoS());
-    rpdo_rt_publisher_ = std::make_unique<ControllerRPDOPRTublisher>(rpdo_pub_);
+    if (!disable_pdo_)
+    {
+      rpdo_pub_ =
+        get_node()->create_publisher<ControllerCommandMsg>("~/rpdo", rclcpp::SystemDefaultsQoS());
+      rpdo_rt_publisher_ = std::make_unique<ControllerRPDOPRTublisher>(rpdo_pub_);
+    }
   }
   catch (const std::exception & e)
   {
@@ -125,11 +128,14 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
   nmt_state_rt_publisher_->msg_.data = std::string();
   nmt_state_rt_publisher_->unlock();
 
-  rpdo_rt_publisher_->lock();
-  rpdo_rt_publisher_->msg_.index = 0u;
-  rpdo_rt_publisher_->msg_.subindex = 0u;
-  rpdo_rt_publisher_->msg_.data = 0u;
-  rpdo_rt_publisher_->unlock();
+  if (!disable_pdo_)
+  {
+    rpdo_rt_publisher_->lock();
+    rpdo_rt_publisher_->msg_.index = 0u;
+    rpdo_rt_publisher_->msg_.subindex = 0u;
+    rpdo_rt_publisher_->msg_.data = 0u;
+    rpdo_rt_publisher_->unlock();
+  }
 
   // init services
 
@@ -180,22 +186,25 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn Canope
     "~/nmt_start_node", on_nmt_state_start, service_profile);
 
   // SDO read
-  auto on_sdo_read = [&](
-                       const canopen_interfaces::srv::CORead::Request::SharedPtr request,
-                       canopen_interfaces::srv::CORead::Response::SharedPtr response) {};
+  if (!disable_pdo_)
+  {
+    auto on_sdo_read = [&](
+                        const canopen_interfaces::srv::CORead::Request::SharedPtr request,
+                        canopen_interfaces::srv::CORead::Response::SharedPtr response) {};
 
-  sdo_read_service_ = get_node()->create_service<ControllerSDOReadSrvType>(
-    "~/sdo_read", on_sdo_read, service_profile);
+    sdo_read_service_ = get_node()->create_service<ControllerSDOReadSrvType>(
+      "~/sdo_read", on_sdo_read, service_profile);
 
-  // SDO write
-  auto on_sdo_write = [&](
-                        const canopen_interfaces::srv::COWrite::Request::SharedPtr request,
-                        canopen_interfaces::srv::COWrite::Response::SharedPtr response) {
+    // SDO write
+    auto on_sdo_write = [&](
+                          const canopen_interfaces::srv::COWrite::Request::SharedPtr request,
+                          canopen_interfaces::srv::COWrite::Response::SharedPtr response) {
 
-  };
+    };
 
-  sdo_write_service_ = get_node()->create_service<ControllerSDOWriteSrvType>(
-    "~/sdo_write", on_sdo_write, service_profile);
+    sdo_write_service_ = get_node()->create_service<ControllerSDOWriteSrvType>(
+      "~/sdo_write", on_sdo_write, service_profile);
+  }
 
   RCLCPP_INFO(get_node()->get_logger(), "configure successful");
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
@@ -208,14 +217,17 @@ CanopenProxyController::command_interface_configuration() const
   command_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
 
   command_interfaces_config.names.reserve(8);
-  command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/index");
-  command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/subindex");
-  command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/data");
-  command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/ons");
   command_interfaces_config.names.push_back(joint_name_ + "/" + "nmt/reset");
   command_interfaces_config.names.push_back(joint_name_ + "/" + "nmt/reset_fbk");
   command_interfaces_config.names.push_back(joint_name_ + "/" + "nmt/start");
   command_interfaces_config.names.push_back(joint_name_ + "/" + "nmt/start_fbk");
+  if (!disable_pdo_)
+  {
+    command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/index");
+    command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/subindex");
+    command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/data");
+    command_interfaces_config.names.push_back(joint_name_ + "/" + "tpdo/ons");
+  }
 
   return command_interfaces_config;
 }
@@ -227,10 +239,13 @@ controller_interface::InterfaceConfiguration CanopenProxyController::state_inter
   state_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
 
   state_interfaces_config.names.reserve(4);
-  state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/index");
-  state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/subindex");
-  state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/data");
   state_interfaces_config.names.push_back(joint_name_ + "/" + "nmt/state");
+  if (!disable_pdo_)
+  {
+    state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/index");
+    state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/subindex");
+    state_interfaces_config.names.push_back(joint_name_ + "/" + "rpdo/data");
+  }
 
   return state_interfaces_config;
 }

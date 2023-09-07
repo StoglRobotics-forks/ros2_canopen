@@ -87,6 +87,7 @@ struct WORos2ControlCoData : public Ros2ControlCOData
     original_data.data_ = static_cast<uint32_t>(data);
   }
 };
+
 struct Ros2ControlNmtState
 {
   Ros2ControlNmtState()
@@ -162,7 +163,7 @@ struct CanopenNodeData
   using PDO_INDICES = std::pair<uint16_t, uint8_t>; // Index, Subindex
   std::unordered_map<PDO_INDICES, double, pair_hash> rpdo_data_map;
 
-  // Push data to the queue - FIFO
+  // Push data to the map
   void set_rpdo_data(ros2_canopen::COData d)
   {
     rpdo_data.set_data(d);
