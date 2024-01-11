@@ -110,7 +110,7 @@ protected:
           command_interfaces_[fbk].set_value(std::numeric_limits<double>::quiet_NaN());
           command_interfaces_[cmd].set_value(std::numeric_limits<double>::quiet_NaN());
         },
-        service_profile);
+        service_profile.get_rmw_qos_profile());
 
     return srv;
   }

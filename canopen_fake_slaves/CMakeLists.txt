@@ -66,6 +66,11 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/config/
 )
 
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -80,6 +85,10 @@ endif()
 
 ament_export_dependencies(
   ${dependencies}
+)
+
+ament_export_include_directories(
+  include
 )
 
 ament_package()
